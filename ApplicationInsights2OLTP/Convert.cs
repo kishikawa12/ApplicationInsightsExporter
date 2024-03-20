@@ -223,7 +223,7 @@ namespace ApplicationInsights2OTLP
         public ExportTraceServiceRequest FromApplicationInsights(string appInsightsJsonStr)
         {
 
-            _logger.LogDebug(appInsightsJsonStr);
+            _logger.LogDebug("[Convert] [FromApplicationInsights] " + appInsightsJsonStr);
 
             var export = new ExportTraceServiceRequest();
 
@@ -275,9 +275,12 @@ namespace ApplicationInsights2OTLP
                 var span = new Span();
                 libSpan.Spans.Add(span);
 
+                _logger.LogDebug("[Convert] [FromApplicationInsights] ConvertToByteString TraceId ");
                 span.TraceId = ConvertToByteString(traceId);
+                _logger.LogDebug("[Convert] [FromApplicationInsights] ConvertToByteString SpanId ");
                 span.SpanId = ConvertToByteString(Value(t.Current, Attributes.Id));
                 if (!String.IsNullOrEmpty(parentId))
+                    _logger.LogDebug("[Convert] [FromApplicationInsights] ConvertToByteString ParentId ");
                     span.ParentSpanId = ConvertToByteString(parentId);
 
                 var spanType = Value(t.Current, Attributes.Type);
@@ -335,7 +338,9 @@ namespace ApplicationInsights2OTLP
                 }
 
                 span.Name = operation;
+                _logger.LogDebug("[Convert] [FromApplicationInsights] ConvertTimeStampToNano StartTime ");
                 span.StartTimeUnixNano = ConvertTimeStampToNano(Value(t.Current, Attributes.Time));
+                _logger.LogDebug("[Convert] [FromApplicationInsights] ConvertTimeStampToNano EndTime ");
                 span.EndTimeUnixNano = ConvertTimeSpanToNano(Value(t.Current, Attributes.Time), t.Current.GetProperty(Attributes.Duration).GetDouble());
 
                 if (hasProperties)
@@ -349,6 +354,7 @@ namespace ApplicationInsights2OTLP
                 
             }
 
+            _logger.LogDebug("[Convert] [FromApplicationInsights] returns ");
             return export;
         }
     }

@@ -33,7 +33,7 @@ namespace ApplicationInsightsForwarder
         }
 
         [FunctionName("ForwardAI")]
-        public async Task Run([EventHubTrigger("appinsights", Connection = "EHConnection")] EventData[] events, ILogger log)
+        public async Task Run([EventHubTrigger("%EVENT_HUB_NAME%", Connection = "EHConnection")] EventData[] events, ILogger log)
         {
             var exceptions = new List<Exception>();
 
